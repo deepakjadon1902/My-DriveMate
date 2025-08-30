@@ -1,4 +1,4 @@
-# 🌟 My DriveMate
+## 🌟 My DriveMate
 
 <div align="center">
 
@@ -75,9 +75,6 @@
 
 ---
 
-
-
----
 
 ## 🛡️ **Tech Arsenal**
 
@@ -410,7 +407,6 @@ VITE_SENTRY_DSN=your-error-tracking-dsn
     └─────────────────────┘
 ```
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/your-badge-id/deploy-status)](https://app.netlify.com/sites/your-site/deploys)
 
 </div>
 
@@ -508,7 +504,14 @@ git push origin feature/GameChangingFeature
 │  └─────────────┘   │  └─────────────┘   │  └─────────────┘  │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
+```
 
+![GitHub stars](https://img.shields.io/github/stars/deepakjadon1902/My_DriveMate?style=social)
+![GitHub forks](https://img.shields.io/github/forks/deepakjadon1902/My_DriveMate?style=social)
+![GitHub issues](https://img.shields.io/github/issues/deepakjadon1902/My_DriveMate)
+![GitHub license](https://img.shields.io/github/license/deepakjadon1902/My_DriveMate)
+
+</div>
 
 ---
 
