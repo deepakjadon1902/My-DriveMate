@@ -349,9 +349,6 @@ const ContactPage: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="bg-white text-blue-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center">
-                Download App
-              </button>
               <a
                 href="mailto:deepakjadon1907@gmail.com"
                 className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-blue-900 transition-all duration-200 flex items-center justify-center"
