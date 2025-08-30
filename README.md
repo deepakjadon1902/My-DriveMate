@@ -30,7 +30,7 @@
 
 **✨ A revolutionary ride-sharing platform that connects souls through journeys ✨**
 
-[🌐 Live Demo](https://your-demo-link.com) • [📖 Documentation](#-documentation) • [🐛 Report Bug](https://github.com/deepakjadon1902/MY_DriveMate/issues) • [💡 Request Feature](https://github.com/deepakjadon1902/MY_DriveMate/issues)
+[🌐 Live Demo](https://melodic-blancmange-1fb476.netlify.app/) • [📖 Documentation](https://github.com/deepakjadon1902/My-DriveMate/edit/main/README.md) • [🐛 Report Bug](https://github.com/deepakjadon1902/My-DriveMate/issues) • [💡 Request Feature](https://github.com/deepakjadon1902/My-DriveMate/issues)
 
 ---
 
@@ -537,7 +537,7 @@ git push origin feature/GameChangingFeature
     GitHub ────┘    └── Portfolio
 ```
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/deepakjadon)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/deepak-jadon-612487272/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/deepakjadon1902)
 
 ### ☕ **Fuel the Innovation**
@@ -589,3 +589,4 @@ git push origin feature/GameChangingFeature
 *Together, we're not just building an app - we're creating connections, fostering community, and making the world a little smaller, one shared ride at a time.* 🌍✨
 
 </div>
+
