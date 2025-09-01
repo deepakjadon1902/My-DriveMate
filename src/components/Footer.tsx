@@ -304,7 +304,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="font-bold text-lg mb-6">Company</h3>
             <ul className="space-y-3">
-              <li>
+              {/* <li>
                 <a 
                   href="/privacy-policy" 
                   className="text-gray-300 hover:text-white transition-colors duration-300 hover:underline"
@@ -319,7 +319,7 @@ const Footer: React.FC = () => {
                 >
                   Terms of Service
                 </a>
-              </li>
+              </li> */}
               <li>
                 <Link 
                   to="/about" 
