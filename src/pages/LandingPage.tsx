@@ -1,363 +1,580 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Clock, Users, CreditCard, Car, Search, Shield, Zap, Globe, Crown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MapPin, Clock, Users, CreditCard, Car, Search, Shield, Zap, Globe, Crown, Heart, Star, AlertCircle, X } from 'lucide-react';
 
-const LandingPage: React.FC = () => {
+const LandingPage = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // Check authentication status on component mount
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = () => {
+    const authToken = localStorage.getItem('authToken') || 
+                     localStorage.getItem('userToken') || 
+                     sessionStorage.getItem('authToken') ||
+                     sessionStorage.getItem('userSession');
+
+    setIsLoggedIn(!!authToken);
+  };
+
+  // Navigation handlers
+  const handleStartJourney = () => {
+    redirectToLogin();
+  };
+
+  const handleDriveAndEarn = () => {
+    if (isLoggedIn) {
+      redirectToDashboard();
+    } else {
+      setShowLoginModal(true);
+    }
+  };
+
+  const redirectToLogin = () => {
+    if (window.location.pathname !== '/login') {
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, '/login');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      } else {
+        window.location.href = '/login';
+      }
+    }
+  };
+
+  const redirectToDashboard = () => {
+    if (window.location.pathname !== '/dashboard') {
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, '/dashboard');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      } else {
+        window.location.href = '/dashboard';
+      }
+    }
+  };
+
+  const handleModalLogin = () => {
+    setShowLoginModal(false);
+    redirectToLogin();
+  };
+
+  const handleModalClose = () => {
+    setShowLoginModal(false);
+  };
+
   return (
     <>
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-20px) translateX(10px); }
+        }
+        @keyframes float2 {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(20px) translateX(-10px); }
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-50px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(50px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        .animate-float2 { animation: float2 6s ease-in-out infinite 2s; }
+        .animate-pulse-custom { animation: pulse 3s ease-in-out infinite; }
+        .animate-fadeInUp { animation: fadeInUp 1.2s ease-out; }
+        .animate-slideInLeft { animation: slideInLeft 1.2s ease-out; }
+        .animate-slideInRight { animation: slideInRight 1.2s ease-out 0.4s both; }
+        .animate-scaleIn { animation: scaleIn 0.8s ease-out; }
+        .animate-delay-1 { animation-delay: 0.2s; animation-fill-mode: both; }
+        .animate-delay-2 { animation-delay: 0.4s; animation-fill-mode: both; }
+        .animate-delay-3 { animation-delay: 0.6s; animation-fill-mode: both; }
+        .animate-delay-4 { animation-delay: 0.8s; animation-fill-mode: both; }
+        
+        .hover-scale { transition: all 0.3s ease; }
+        .hover-scale:hover { transform: scale(1.05); }
+        .hover-rotate:hover { transform: scale(1.1) rotate(5deg); }
+        
+        .group:hover .group-hover\\:shadow-glow {
+          box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+        }
+
+        .modal-backdrop {
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+        }
+      `}</style>
+
       {/* Hero Section */}
-      <section className="relative py-40 overflow-hidden bg-black">
-        {/* Glow Background */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+        {/* Premium Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-[#0a1f44]/30 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-blue-900/20 rounded-full blur-3xl animate-pulse-custom"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 bg-white/5 rounded-full blur-3xl animate-pulse-custom" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 sm:w-96 sm:h-96 md:w-[600px] md:h-[600px] bg-gradient-to-r from-blue-900/10 to-transparent rounded-full blur-3xl"></div>
         </div>
 
-        {/* Floating gradient orbs */}
-        <motion.div
-          className="absolute top-32 left-16 w-24 h-24 bg-[#0a1f44]/40 rounded-full blur-2xl"
-          animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 6 }}
-        />
-        <motion.div
-          className="absolute bottom-32 right-16 w-32 h-32 bg-white/10 rounded-full blur-2xl"
-          animate={{ y: [0, 20, 0], x: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 8, delay: 2 }}
-        />
+        {/* Floating Orbs - Responsive */}
+        <div className="absolute top-16 left-8 sm:top-20 sm:left-20 w-2 h-2 sm:w-4 sm:h-4 bg-blue-400 rounded-full opacity-60 animate-float"></div>
+        <div className="absolute bottom-16 right-16 sm:bottom-32 sm:right-32 w-3 h-3 sm:w-6 sm:h-6 bg-white rounded-full opacity-40 animate-float2"></div>
 
-        <motion.div
-          className="container mx-auto px-6 md:px-8 relative z-10"
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-16 sm:py-20 lg:py-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left Content */}
-            <div className="space-y-10">
-              <motion.h3
-                className="text-7xl md:text-9xl font-black leading-none text-white"
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 1 }}
-              >
-                RIDE<br />
-                <span className="text-[#0a1f44]">SMARTER</span><br />
-                <span className="text-slate-300">GO FASTER</span>
-              </motion.h3>
+            <div className="space-y-6 sm:space-y-8 text-center lg:text-left animate-slideInLeft">
+              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.85] sm:leading-[0.9] text-white animate-delay-2 animate-fadeInUp">
+                YOUR JOURNEY
+                <br />
+                <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                  MATTERS
+                </span>
+                <br />
+                <span className="text-gray-300 text-3xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">TO US</span>
+              </h1>
 
-              <motion.p
-                className="text-2xl md:text-3xl text-slate-300 leading-relaxed max-w-2xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 1 }}
-              >
-                Safe, affordable, and always on time.  
-                The future of everyday travel — built for you.
-              </motion.p>
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-2xl mx-auto lg:mx-0 px-4 lg:px-0 animate-delay-3 animate-fadeInUp">
+                Every mile you travel deserves trust, comfort, and genuine care. 
+                <span className="text-blue-400 font-medium"> Join thousands who've made the smart choice</span> — 
+                where your safety meets our passion for perfect journeys.
+              </p>
 
-              <motion.div
-                className="flex flex-col sm:flex-row gap-8 pt-6"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2, duration: 0.8 }}
-              >
-                <button className="bg-[#0a1f44] hover:bg-[#112b5a] text-white font-bold text-xl px-12 py-5 rounded-2xl shadow-2xl transition-all duration-300 transform hover:scale-105">
-                  Book a Ride
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4 px-4 lg:px-0 justify-center lg:justify-start animate-delay-4 animate-fadeInUp">
+                <button 
+                  onClick={handleStartJourney}
+                  className="relative bg-blue-800 hover:bg-blue-700 text-white font-bold text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 rounded-full shadow-2xl shadow-blue-900/50 transition-all duration-300 group overflow-hidden w-full sm:w-auto hover-scale active:scale-95"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative flex items-center justify-center space-x-2">
+                    <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>Start Your Journey</span>
+                  </span>
                 </button>
-                <button className="border-2 border-[#0a1f44] text-[#0a1f44] hover:bg-[#0a1f44] hover:text-white font-bold text-xl px-12 py-5 rounded-2xl transition-all duration-300">
-                  Drive with Us
+                
+                <button 
+                  onClick={handleDriveAndEarn}
+                  className="border-2 border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-bold text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 rounded-full transition-all duration-300 group w-full sm:w-auto hover-scale active:scale-95"
+                >
+                  <span className="flex items-center justify-center space-x-2">
+                    <Car className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>{isLoggedIn ? 'Go to Dashboard' : 'Drive & Earn'}</span>
+                  </span>
                 </button>
-              </motion.div>
+              </div>
             </div>
 
-            {/* Right Content → replaced image with futuristic floating cards */}
-            <motion.div
-              className="relative hidden lg:block"
-              initial={{ opacity: 0, x: 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 1.2 }}
-            >
-              {/* Floating Card 1 */}
-              <motion.div
-                className="absolute -bottom-12 -left-12 bg-gradient-to-br from-black/80 to-[#0a1f44]/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.5, duration: 0.8 }}
-              >
-                <div className="flex items-center space-x-6">
-                  <div className="p-4 rounded-xl bg-[#0a1f44]/30 border border-[#0a1f44]/50">
-                    <MapPin size={32} className="text-[#0a1f44]" />
+            {/* Right Content - Enhanced Floating Cards */}
+            <div className="relative hidden lg:block xl:scale-110 animate-slideInRight">
+              {/* Trust Card */}
+              <div className="absolute -top-8 -left-8 bg-gradient-to-br from-white/10 to-blue-900/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 lg:p-8 shadow-2xl max-w-xs hover-scale animate-scaleIn" style={{animationDelay: '1.2s', transform: 'rotate(-5deg)'}}>
+                <div className="flex items-center space-x-4">
+                  <div className="p-2 lg:p-3 rounded-2xl bg-blue-800/30 border border-blue-600/30">
+                    <Shield className="w-6 h-6 lg:w-8 lg:h-8 text-blue-400" />
                   </div>
                   <div>
-                    <p className="font-bold text-2xl text-white">Instant Matching</p>
-                    <p className="text-lg text-slate-400">Get a ride in seconds</p>
+                    <p className="font-bold text-lg lg:text-xl text-white">100% Verified</p>
+                    <p className="text-xs lg:text-sm text-gray-300">Every ride, every driver</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Floating Card 2 */}
-              <motion.div
-                className="absolute top-20 -right-12 bg-gradient-to-br from-black/80 to-[#0a1f44]/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.8, duration: 0.8 }}
-              >
-                <div className="flex items-center space-x-6">
-                  <div className="p-4 rounded-xl bg-white/10 border border-white/20">
-                    <CreditCard size={32} className="text-white" />
+              {/* Community Card */}
+              <div className="absolute top-20 lg:top-24 -right-8 lg:-right-12 bg-gradient-to-br from-white/10 to-blue-900/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 lg:p-8 shadow-2xl max-w-xs hover-scale animate-scaleIn" style={{animationDelay: '1.5s', transform: 'rotate(5deg)'}}>
+                <div className="flex items-center space-x-4">
+                  <div className="p-2 lg:p-3 rounded-2xl bg-white/10 border border-white/20">
+                    <Users className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
                   </div>
                   <div>
-                    <p className="font-bold text-2xl text-white">Transparent Pricing</p>
-                    <p className="text-lg text-slate-400">No hidden fees, ever</p>
+                    <p className="font-bold text-lg lg:text-xl text-white">Growing Community</p>
+                    <p className="text-xs lg:text-sm text-gray-300">Real people, real connections</p>
                   </div>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+
+              {/* Free Platform Card */}
+              <div className="absolute bottom-0 left-4 bg-gradient-to-br from-green-800/40 to-black/60 backdrop-blur-xl border border-green-600/30 rounded-3xl p-4 lg:p-6 shadow-2xl hover-scale animate-scaleIn" style={{animationDelay: '1.8s'}}>
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 lg:p-3 rounded-2xl bg-green-600/30 border border-green-500/50">
+                    <Heart className="w-4 h-4 lg:w-5 lg:h-5 text-green-400" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-base lg:text-lg text-white">100% Free</p>
+                    <p className="text-xs text-gray-300">Always & Forever</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Floating Cards */}
+            <div className="lg:hidden mt-8 px-4">
+              <div className="flex flex-wrap gap-4 justify-center">
+                <div className="bg-gradient-to-br from-white/10 to-blue-900/30 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl flex-1 min-w-[140px] max-w-[160px] animate-scaleIn animate-delay-1">
+                  <Shield className="w-6 h-6 text-blue-400 mb-2" />
+                  <p className="font-bold text-sm text-white">100% Verified</p>
+                  <p className="text-xs text-gray-300">Safe & Secure</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-white/10 to-green-900/30 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-xl flex-1 min-w-[140px] max-w-[160px] animate-scaleIn animate-delay-2">
+                  <Heart className="w-6 h-6 text-green-400 mb-2" />
+                  <p className="font-bold text-sm text-white">100% Free</p>
+                  <p className="text-xs text-gray-300">Always & Forever</p>
+                </div>
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-// {/* Features Grid */}
-<section className="py-40 bg-slate-950">
-  <div className="container mx-auto px-6 md:px-8">
-    <motion.div
-      className="text-center mb-24"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1 }}
-    >
-      <h2 className="text-6xl md:text-7xl font-black mb-8 text-white">CORE FEATURES</h2>
-      <p className="text-2xl md:text-3xl text-slate-400 max-w-4xl mx-auto leading-relaxed">
-        Why riders and drivers across India trust My Drivemate for smarter, safer, and cost-effective travel
-      </p>
-    </motion.div>
-    
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-      {[
-        {
-          icon: <Shield className="h-16 w-16" />,
-          title: "Verified & Secure",
-          description: "Every driver and passenger is identity-verified. With background checks and OTP ride confirmation, trust is built into every trip."
-        },
-        {
-          icon: <Zap className="h-16 w-16" />,
-          title: "Direct Payments",
-          description: "No commissions, no hidden fees. Passengers pay drivers directly, keeping rides affordable and earnings fair."
-        },
-        {
-          icon: <Globe className="h-16 w-16" />,
-          title: "Pan-India Access",
-          description: "From metro cities to growing towns, our network is expanding fast — helping you find verified rides wherever you go."
-        },
-        {
-          icon: <Users className="h-16 w-16" />,
-          title: "Community-Driven",
-          description: "More than just ride-sharing, it’s a trusted network of professionals, students, and families traveling together safely."
-        },
-        {
-          icon: <CreditCard className="h-16 w-16" />,
-          title: "Transparent Pricing",
-          description: "Clear and fair costs — no surge pricing, no middlemen. Just genuine ride-sharing where everyone benefits."
-        },
-        {
-          icon: <Clock className="h-16 w-16" />,
-          title: "Flexible & Reliable",
-          description: "Book rides anytime, reschedule when needed, and enjoy the flexibility of real people coordinating real journeys."
-        }
-      ].map((feature, index) => (
-        <motion.div 
-          key={index}
-          className="group"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: index * 0.15, duration: 0.8 }}
-        >
-          <div className="bg-gradient-to-br from-slate-800/60 to-blue-900/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-10 h-full group-hover:border-blue-500/50 group-hover:shadow-2xl group-hover:shadow-blue-500/10 transition-all duration-500 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            
-            <motion.div 
-              className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 p-6 rounded-2xl w-fit mb-8 border border-blue-500/30"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="text-blue-400">
-                {feature.icon}
-              </div>
-            </motion.div>
-            
-            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-white">{feature.title}</h3>
-            <p className="text-slate-400 leading-relaxed text-lg">{feature.description}</p>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  </div>
-</section>
-
-{/* How It Works */}
-<section className="py-40 bg-white">
-  <div className="container mx-auto px-6 md:px-8">
-    <motion.div
-      className="text-center mb-24"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1 }}
-    >
-      <h2 className="text-6xl md:text-7xl font-black mb-8 text-slate-900">HOW IT WORKS</h2>
-      <p className="text-2xl md:text-3xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-        A simple, transparent process to connect trusted drivers and riders
-      </p>
-    </motion.div>
-    
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-      {[
-        {
-          step: "01",
-          icon: <Users className="h-20 w-20" />,
-          title: "Create Your Profile",
-          description: "Sign up with mobile verification and build trust with your verified identity. Choose whether you’re driving or riding."
-        },
-        {
-          step: "02",
-          icon: <Search className="h-20 w-20" />,
-          title: "Find Your Match",
-          description: "Drivers list routes, riders search rides. Our system connects you instantly with verified travel partners going the same way."
-        },
-        {
-          step: "03",
-          icon: <Car className="h-20 w-20" />,
-          title: "Ride & Pay Directly",
-          description: "Meet your drivemate, enjoy a safe and seamless journey, and pay your driver directly without extra app charges."
-        }
-      ].map((item, index) => (
-        <motion.div 
-          key={index}
-          className="relative text-center group"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: index * 0.4, duration: 1 }}
-        >
-          <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 border-2 border-slate-200 rounded-3xl p-12 relative overflow-hidden group-hover:border-blue-300 group-hover:shadow-2xl transition-all duration-500">
-            <div className="absolute top-8 right-8 text-9xl font-black text-slate-100 group-hover:text-blue-50 transition-colors duration-500">
-              {item.step}
+      {/* Features Section */}
+      <section className="py-16 sm:py-24 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+            <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-full px-4 sm:px-6 py-2 sm:py-3 mb-6 sm:mb-8 animate-scaleIn">
+              <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+              <span className="text-blue-800 font-medium text-sm sm:text-base">Built with Care</span>
             </div>
             
-            <motion.div 
-              className="bg-gradient-to-br from-blue-600 to-blue-800 p-8 rounded-3xl w-fit mx-auto mb-10 shadow-2xl"
-              whileHover={{ scale: 1.15, rotate: 10 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="text-white">
-                {item.icon}
-              </div>
-            </motion.div>
-            
-            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900">{item.title}</h3>
-            <p className="text-slate-600 leading-relaxed text-xl">{item.description}</p>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  </div>
-</section>
-
-{/* Benefits Section */}
-<section className="py-40 bg-black">
-  <div className="container mx-auto px-6 md:px-8">
-    <motion.div
-      className="bg-gradient-to-br from-black/80 to-[#0a1f44]/80 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-20 text-center relative overflow-hidden shadow-2xl"
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1 }}
-    >
-      {/* Subtle background glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f44]/20 to-white/5"></div>
-      
-      <div className="relative z-10">
-        <h2 className="text-5xl md:text-6xl font-black mb-8 text-white tracking-tight">
-          WHY RIDE WITH US?
-        </h2>
-        <p className="text-2xl text-slate-300 mb-16 max-w-3xl mx-auto leading-relaxed">
-          Simple, safe, and stress-free. The way ride-sharing was meant to be.
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {[
-            { 
-              icon: <CreditCard className="h-12 w-12" />, 
-              title: "NO EXTRA FEES",
-              description: "Pay only the ride fare. No hidden charges, no surprise costs — ever."
-            },
-            { 
-              icon: <Shield className="h-12 w-12" />, 
-              title: "SAFETY FIRST",
-              description: "Verified drivers, live tracking, and built-in safety tools for peace of mind."
-            },
-            { 
-              icon: <Users className="h-12 w-12" />, 
-              title: "COMMUNITY DRIVEN",
-              description: "Every ride builds trust — riders and drivers growing together in a safe network."
-            },
-            { 
-              icon: <MapPin className="h-12 w-12" />, 
-              title: "GO ANYWHERE",
-              description: "Ride across cities with ease. No limits, just seamless travel at your fingertips."
-            }
-          ].map((benefit, index) => (
-            <motion.div 
-              key={index}
-              className="group"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15, duration: 0.8 }}
-            >
-              <div className="bg-gradient-to-br from-black/60 to-[#0a1f44]/60 backdrop-blur-lg border border-slate-600/50 rounded-2xl p-8 h-full group-hover:border-[#0a1f44] group-hover:shadow-xl group-hover:shadow-[#0a1f44]/40 transition-all duration-300">
-                <motion.div 
-                  className="bg-gradient-to-br from-[#0a1f44]/30 to-white/10 p-4 rounded-xl w-fit mx-auto mb-6 border border-[#0a1f44]/40"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {/* Changed from text-[#0a1f44] to text-white */}
-                  <div className="text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)] transition-all duration-300">
-                    {benefit.icon}
-                  </div>
-                </motion.div>
-                
-                <h3 className="text-xl font-bold mb-4 text-white">{benefit.title}</h3>
-                <p className="text-slate-400 leading-relaxed text-sm">{benefit.description}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Closing Message */}
-        <motion.div 
-          className="mt-16 pt-12 border-t border-slate-700/50"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-        >
-          <div className="bg-gradient-to-r from-black/70 to-[#0a1f44]/70 border border-[#0a1f44]/40 rounded-2xl p-8">
-            <p className="text-xl text-slate-300 leading-relaxed italic">
-              "Ride the smart way — transparent, safe, and designed for everyone."
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-4 sm:mb-6 text-black px-4 animate-fadeInUp">
+              WHY WE'RE 
+              <span className="bg-gradient-to-r from-blue-800 to-blue-600 bg-clip-text text-transparent"> DIFFERENT</span>
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed px-4 animate-fadeInUp animate-delay-1">
+              We don't just connect rides — we build relationships. Every feature is designed 
+              with your heart and safety in mind.
             </p>
           </div>
-        </motion.div>
-      </div>
-    </motion.div>
-  </div>
-</section>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-0">
+            {[
+              {
+                icon: <Shield className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />,
+                title: "Trust You Can Feel",
+                description: "Every driver is family-verified with background checks. We protect what matters most — you and your loved ones.",
+                emotion: "Security meets warmth"
+              },
+              {
+                icon: <Heart className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />,
+                title: "Completely Free",
+                description: "No hidden costs, no subscription fees, no premium charges. Free forever — because good things should be accessible to everyone.",
+                emotion: "Kindness over profit"
+              },
+              {
+                icon: <Globe className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />,
+                title: "Everywhere You Need",
+                description: "From your neighborhood to cross-country journeys. We're expanding our caring community across India, one heart at a time.",
+                emotion: "Home away from home"
+              },
+              {
+                icon: <Users className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />,
+                title: "Real People, Real Stories",
+                description: "Connect with verified professionals, students, and families. Every ride creates meaningful connections and lasting friendships.",
+                emotion: "Community over commerce"
+              },
+              {
+                icon: <Zap className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />,
+                title: "Genuine Connections",
+                description: "No algorithms manipulating your experience. Just real people helping real people reach their destinations safely.",
+                emotion: "Humanity over technology"
+              },
+              {
+                icon: <Clock className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14" />,
+                title: "Built on Trust",
+                description: "Every feature designed with honesty and transparency. No fake reviews, no inflated numbers — just authentic experiences.",
+                emotion: "Truth in every journey"
+              }
+            ].map((feature, index) => (
+              <div 
+                key={index}
+                className="group relative animate-fadeInUp hover-scale"
+                style={{animationDelay: `${index * 0.1}s`}}
+              >
+                <div className="bg-gradient-to-br from-white to-gray-50 border-2 border-gray-100 rounded-2xl sm:rounded-3xl p-6 sm:p-8 h-full group-hover:border-blue-200 group-hover:shadow-glow transition-all duration-500 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-blue-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl w-fit mb-4 sm:mb-6 shadow-xl hover-rotate transition-all duration-300">
+                    <div className="text-white">
+                      {feature.icon}
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4 text-black group-hover:text-blue-900 transition-colors">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm sm:text-base lg:text-lg mb-3 sm:mb-4">{feature.description}</p>
+                  <p className="text-blue-600 font-medium italic text-xs sm:text-sm">{feature.emotion}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      {/* How It Works */}
+      <section className="py-16 sm:py-24 lg:py-32 bg-black">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-4 sm:mb-6 text-white px-4 animate-fadeInUp">
+              YOUR JOURNEY IN 
+              <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent"> 3 STEPS</span>
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4 animate-fadeInUp animate-delay-1">
+              Simple, personal, and built around you. Because great journeys shouldn't be complicated.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 px-4 sm:px-0">
+            {[
+              {
+                step: "01",
+                icon: <Users className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />,
+                title: "Join Our Family",
+                description: "Create your verified profile in minutes. Share who you are, build trust, and become part of our caring community.",
+                detail: "Quick verification • Safe community • Real connections"
+              },
+              {
+                step: "02",
+                icon: <Search className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />,
+                title: "Find Your Perfect Match",
+                description: "Smart matching with people going your way. Real-time connections with verified travelers who share your journey.",
+                detail: "Instant matching • Same direction • Verified travelers"
+              },
+              {
+                step: "03",
+                icon: <Car className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16" />,
+                title: "Travel & Connect",
+                description: "Enjoy safe, comfortable rides with genuine people. Pay directly, travel securely, and maybe make a new friend.",
+                detail: "Direct payment • Safe travels • Meaningful connections"
+              }
+            ].map((item, index) => (
+              <div 
+                key={index}
+                className="relative text-center group animate-fadeInUp hover-scale"
+                style={{animationDelay: `${index * 0.3}s`}}
+              >
+                <div className="bg-gradient-to-br from-gray-900/80 to-blue-900/40 border border-gray-700/50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 relative overflow-hidden group-hover:border-blue-600/50 group-hover:shadow-glow transition-all duration-500">
+                  <div className="absolute top-4 right-4 sm:top-6 sm:right-6 text-5xl sm:text-6xl lg:text-7xl font-black text-gray-800/30 group-hover:text-blue-800/20 transition-colors duration-500">
+                    {item.step}
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl w-fit mx-auto mb-6 sm:mb-8 shadow-2xl hover-rotate transition-all duration-400">
+                    <div className="text-white">
+                      {item.icon}
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-white">{item.title}</h3>
+                  <p className="text-gray-300 leading-relaxed text-sm sm:text-base lg:text-lg mb-4">{item.description}</p>
+                  <div className="inline-flex items-center bg-blue-900/30 border border-blue-700/50 rounded-full px-3 sm:px-4 py-1 sm:py-2">
+                    <p className="text-blue-300 text-xs sm:text-sm font-medium">{item.detail}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      {/* Emotional Connection Section */}
+      <section className="py-16 sm:py-24 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto text-center animate-scaleIn">
+            <div className="bg-gradient-to-br from-gray-50 to-blue-50/70 border-2 border-blue-100 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent"></div>
+              
+              <div className="relative z-10">
+                <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-blue-100 border border-blue-200 rounded-full px-4 sm:px-6 lg:px-8 py-2 sm:py-3 lg:py-4 mb-6 sm:mb-8 animate-fadeInUp">
+                  <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                  <span className="text-blue-800 font-bold text-sm sm:text-base lg:text-lg">From Our Hearts to Yours</span>
+                </div>
+                
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-6 sm:mb-8 text-black leading-tight px-4 animate-fadeInUp animate-delay-1">
+                  MORE THAN JUST RIDES —<br />
+                  <span className="bg-gradient-to-r from-blue-800 to-blue-600 bg-clip-text text-transparent">
+                    WE'RE BUILDING CONNECTIONS
+                  </span>
+                </h2>
+                
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed px-4 animate-fadeInUp animate-delay-2">
+                  Every journey tells a story. Every driver has dreams. Every passenger matters. 
+                  We're not just a platform — we're a community where real people care about real people.
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12">
+                  {[
+                    { 
+                      icon: <Heart className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10" />, 
+                      title: "COMPLETELY FREE",
+                      description: "No hidden fees, no premium plans, no subscription costs. Free forever because we believe good connections shouldn't cost money."
+                    },
+                    { 
+                      icon: <Shield className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10" />, 
+                      title: "FAMILY SAFE",
+                      description: "Every driver verified like family. Every ride protected with care. Every journey secured with love and responsibility."
+                    },
+                    { 
+                      icon: <Users className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10" />, 
+                      title: "AUTHENTIC COMMUNITY",
+                      description: "Real people, real connections, real friendships. No fake reviews, no inflated numbers — just genuine human experiences."
+                    },
+                    { 
+                      icon: <MapPin className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10" />, 
+                      title: "EVERYWHERE",
+                      description: "From village roads to city highways. Wherever your heart wants to go, we're building a network of caring people to help you get there."
+                    }
+                  ].map((benefit, index) => (
+                    <div 
+                      key={index}
+                      className="group animate-fadeInUp hover-scale"
+                      style={{animationDelay: `${index * 0.15}s`}}
+                    >
+                      <div className="bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 h-full group-hover:border-blue-200 group-hover:shadow-glow transition-all duration-300">
+                        <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-2 sm:p-3 rounded-lg sm:rounded-xl w-fit mx-auto mb-3 sm:mb-4 hover-rotate transition-all duration-300">
+                          <div className="text-white">
+                            {benefit.icon}
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-sm sm:text-base lg:text-lg font-bold mb-2 sm:mb-3 text-black">{benefit.title}</h3>
+                        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{benefit.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-800 to-blue-700 rounded-xl sm:rounded-2xl p-6 sm:p-8 text-white animate-fadeInUp animate-delay-4">
+                  <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+                    <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold">Your Journey, Our Promise</h3>
+                    <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                  </div>
+                  <p className="text-base sm:text-lg lg:text-xl leading-relaxed italic px-2 sm:px-4">
+                    "We believe every mile should be meaningful, every ride should be safe, 
+                    and every person should feel valued. This isn't just our promise — this is our heart, and it's completely free."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-black">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto animate-fadeInUp">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-6 sm:mb-8 text-white px-4 leading-tight">
+              READY TO EXPERIENCE THE 
+              <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent"> DIFFERENCE?</span>
+            </h2>
+            
+            <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 sm:mb-12 max-w-2xl mx-auto px-4 leading-relaxed animate-fadeInUp animate-delay-1">
+              Join a community built on trust, friendship, and genuine human connection. 
+              Where every journey is an opportunity to meet someone wonderful.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4 sm:px-0 animate-fadeInUp animate-delay-2">
+              <button 
+                onClick={handleStartJourney}
+                className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white font-bold text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 rounded-full shadow-2xl shadow-blue-900/50 transition-all duration-300 group w-full sm:w-auto hover-scale active:scale-95"
+              >
+                <span className="flex items-center justify-center space-x-2 sm:space-x-3">
+                  <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span>Start Your Journey</span>
+                </span>
+              </button>
+              
+              <button 
+                onClick={handleDriveAndEarn}
+                className="border-2 border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white font-bold text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 rounded-full transition-all duration-300 w-full sm:w-auto hover-scale active:scale-95"
+              >
+                <span className="flex items-center justify-center space-x-2 sm:space-x-3">
+                  <Car className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span>{isLoggedIn ? 'Go to Dashboard' : 'Drive & Earn'}</span>
+                </span>
+              </button>
+            </div>
+
+            <div className="mt-12 sm:mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 text-center">
+              {[
+                { number: "100%", label: "Verified Platform" },
+                { number: "Free", label: "Always & Forever" },
+                { number: "Real", label: "Authentic Community" },
+                { number: "24/7", label: "Care & Support" }
+              ].map((stat, index) => (
+                <div
+                  key={index}
+                  className="bg-gradient-to-br from-gray-900/60 to-blue-900/30 backdrop-blur-xl border border-gray-700/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 hover-scale animate-scaleIn"
+                  style={{animationDelay: `${0.6 + index * 0.1}s`}}
+                >
+                  <div className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-1 sm:mb-2">
+                    {stat.number}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-400 font-medium">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black/80 modal-backdrop flex items-center justify-center z-50 px-4 animate-fadeInUp">
+          <div className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 max-w-md w-full mx-4 relative animate-scaleIn shadow-2xl">
+            <button 
+              onClick={handleModalClose}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors duration-300 group"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5 text-gray-500 group-hover:text-gray-700" />
+            </button>
+
+            <div className="text-center">
+              <div className="bg-gradient-to-br from-orange-500 to-red-600 p-4 rounded-2xl w-fit mx-auto mb-6 shadow-xl">
+                <AlertCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+              </div>
+              
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-black mb-4 text-gray-900">Login Required</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed text-sm sm:text-base">
+                Please login first to access the driver dashboard and start earning with our caring community.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <button 
+                  onClick={handleModalLogin}
+                  className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 flex-1 hover-scale active:scale-95 shadow-lg"
+                >
+                  Login Now
+                </button>
+                <button 
+                  onClick={handleModalClose}
+                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 font-bold px-6 py-3 rounded-full transition-all duration-300 flex-1 hover-scale active:scale-95"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
+
 export default LandingPage;
